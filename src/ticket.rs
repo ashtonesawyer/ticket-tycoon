@@ -83,13 +83,6 @@ pub enum Category {
     Misc,
 }
 
-#[derive(Debug)]
-pub struct Currency {
-    cash: u64,
-    xp: u64,
-}
-
-
 /// Ticket object 
 #[derive(Debug)]
 pub struct Ticket {
@@ -137,7 +130,7 @@ impl Ticket {
     /// Check if a ticket has been clicked enough to be completed
     /// The higher the difficulty, the more the ticket needs to be clicked
     pub fn is_complete(&self) -> bool {
-        match (self.difficulty) {
+        match self.difficulty {
             Difficulty::Easy => self.clicked > 5,
             Difficulty::Med => self.clicked > 15,
             Difficulty::Hard => self.clicked > 30, 
