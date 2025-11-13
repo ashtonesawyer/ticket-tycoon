@@ -74,7 +74,7 @@ fn equality() {
 }
 
 /// How difficult a ticket is to complete
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Difficulty {
     Easy,
     Med,
@@ -82,7 +82,7 @@ pub enum Difficulty {
 }
 
 /// Categories that tickets can full under
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Category {
     Network,
     Windows,
@@ -92,7 +92,7 @@ pub enum Category {
 }
 
 /// Ticket object
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Ticket {
     /// How hard the ticket is to complete
     difficulty: Difficulty,
@@ -102,6 +102,8 @@ pub struct Ticket {
     clicked: u16,
     /// Name of the ticket
     name: String,
+    /// How many clicks to complete
+    goal: u16,
 }
 
 impl Ticket {
@@ -112,6 +114,11 @@ impl Ticket {
             category,
             clicked: 0,
             name: name.to_string(),
+            goal: match difficulty {
+                Difficulty::Easy => 5,
+                Difficulty::Med => 15,
+                Difficulty::Hard => 30,
+            }
         }
     }
 
@@ -125,9 +132,17 @@ impl Ticket {
         &self.category
     }
 
+    pub fn name(&self) -> &String {
+        &self.name
+    }
+
     /// Returns how many time the ticket was clicked
-    pub fn clicked(self) -> u16 {
+    pub fn clicked(&self) -> u16 {
         self.clicked
+    }
+
+    pub fn goal(&self) -> u16 {
+        self.goal
     }
 
     /// Click the ticket one time
@@ -139,9 +154,9 @@ impl Ticket {
     /// The higher the difficulty, the more the ticket needs to be clicked
     pub fn is_complete(&self) -> bool {
         match self.difficulty {
-            Difficulty::Easy => self.clicked > 5,
-            Difficulty::Med => self.clicked > 15,
-            Difficulty::Hard => self.clicked > 30,
+            Difficulty::Easy => self.clicked > self.goal,
+            Difficulty::Med => self.clicked > self.goal,
+            Difficulty::Hard => self.clicked > self.goal,
         }
     }
 }

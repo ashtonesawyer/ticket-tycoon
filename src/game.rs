@@ -69,6 +69,21 @@ impl GameState {
         }
     }
 
+    pub fn wallet(&self) -> &Currency {
+        &self.wallet
+    }
+
+    pub fn working(&self) -> &Vec<Ticket> {
+        &self.working
+    }
+
+    pub fn init_queue(&mut self) {
+        for _ in 0..4 {
+            self.spawn_ticket();
+            self.assign_next_ticket();
+        }
+    }
+
     /// Add a random new ticket to the queue
     pub fn spawn_ticket(&mut self) {
         let mut rng = rand::rng();
