@@ -83,7 +83,7 @@ pub enum Category {
     Misc,
 }
 
-/// Ticket object 
+/// Ticket object
 #[derive(Debug)]
 pub struct Ticket {
     /// How hard the ticket is to complete
@@ -97,7 +97,7 @@ pub struct Ticket {
 }
 
 impl Ticket {
-    /// Create a new ticket 
+    /// Create a new ticket
     pub fn new(difficulty: Difficulty, category: Category, name: &str) -> Self {
         Self {
             difficulty,
@@ -133,7 +133,7 @@ impl Ticket {
         match self.difficulty {
             Difficulty::Easy => self.clicked > 5,
             Difficulty::Med => self.clicked > 15,
-            Difficulty::Hard => self.clicked > 30, 
+            Difficulty::Hard => self.clicked > 30,
         }
     }
 }

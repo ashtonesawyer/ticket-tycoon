@@ -58,10 +58,7 @@ pub struct Currency {
 impl Currency {
     /// Start with 0 cash + 0 xp
     pub fn new() -> Self {
-        Self {
-            cash: 0,
-            xp: 0,
-        }
+        Self { cash: 0, xp: 0 }
     }
 
     /// Returns the amount of cash
@@ -84,27 +81,27 @@ impl Currency {
         self.xp += n;
     }
 
-    /// Return Some() when successful, return None when there isn't enough 
+    /// Return Some() when successful, return None when there isn't enough
     pub fn rm_cash(&self, n: u64) -> Option<Self> {
         if n <= self.cash {
             return Some(Self {
                 cash: self.cash - n,
-                xp: self.xp
-            })
+                xp: self.xp,
+            });
         } else {
-            return None
+            return None;
         }
     }
 
-    /// Return Some() when successful, return None when there isn't enough 
+    /// Return Some() when successful, return None when there isn't enough
     pub fn rm_xp(&self, n: u64) -> Option<Self> {
         if n <= self.xp {
             return Some(Self {
                 cash: self.cash,
                 xp: self.xp - n,
-            })
+            });
         } else {
-            return None
+            return None;
         }
     }
 }

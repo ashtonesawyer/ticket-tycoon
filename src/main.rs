@@ -1,10 +1,10 @@
+mod currency;
 mod game;
 mod ticket;
-mod currency;
 
+use currency::*;
 use game::*;
 use ticket::*;
-use currency::*;
 
 fn main() {
     println!("Hello, world!");
