@@ -3,6 +3,53 @@ use crate::ticket::*;
 
 use rand::Rng;
 
+#[test]
+fn empty() {
+    let game = GameState::new();
+    assert_eq!(game.queue.len(), 0);
+    assert_eq!(game.wallet.cash(), 0);
+    assert_eq!(game.wallet.xp(), 0);
+    assert_eq!(game.working.len(), 0);
+}
+
+#[test]
+fn random_tickets() {
+    let mut game = GameState::new();
+    for _ in 0..5 {
+        game.spawn_ticket();
+    }
+    for i in 0..5 {
+        for j in (i+1)..5 {
+            assert!(game.queue[i] != game.queue[j]);
+        }
+    }
+
+}
+
+#[test]
+fn click_easy_complete() {
+    let mut game = GameState::new();
+    game.working.push(Ticket::new(Difficulty::Easy, Category::Web, "name"));
+    for _ in 0..6 {
+        game.click_ticket(0);
+    }
+    assert_eq!(game.wallet.cash(), 10);
+    assert_eq!(game.wallet.xp(), 5);
+    assert_eq!(game.working.len(), 0);
+}
+
+#[test]
+fn click_easy_incomplete() {
+    let mut game = GameState::new();
+    game.working.push(Ticket::new(Difficulty::Easy, Category::Web, "name"));
+    for _ in 0..4 {
+        game.click_ticket(0);
+    }
+    assert_eq!(game.wallet.cash(), 0);
+    assert_eq!(game.wallet.xp(), 0);
+    assert_eq!(game.working.len(), 1);
+}
+
 /// Data needed for the main game loop
 pub struct GameState {
     /// Queue of unfinished tickets

@@ -65,6 +65,14 @@ fn hard_complete() {
     assert_eq!(ticket.is_complete(), true);
 }
 
+#[test]
+fn equality() {
+    assert_eq!(Ticket::new(Difficulty::Easy, Category::Web, "name"), Ticket::new(Difficulty::Easy, Category::Web, "name"));
+    assert!(Ticket::new(Difficulty::Easy, Category::Web, "name") != Ticket::new(Difficulty::Easy, Category::Web, "name1"));
+    assert!(Ticket::new(Difficulty::Easy, Category::Web, "name") != Ticket::new(Difficulty::Hard, Category::Web, "name"));
+    assert!(Ticket::new(Difficulty::Easy, Category::Web, "name") != Ticket::new(Difficulty::Easy, Category::Misc, "name"));
+}
+
 /// How difficult a ticket is to complete
 #[derive(Debug, PartialEq)]
 pub enum Difficulty {
@@ -84,7 +92,7 @@ pub enum Category {
 }
 
 /// Ticket object
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Ticket {
     /// How hard the ticket is to complete
     difficulty: Difficulty,
