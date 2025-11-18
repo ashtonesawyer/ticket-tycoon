@@ -3,12 +3,7 @@ mod game;
 mod ticket;
 mod app;
 
-use currency::*;
-use game::*;
-use ticket::*;
-use app::*;
-
-use dioxus::prelude::*;
+use dioxus;
 
 fn main() {
     dioxus::launch(app::app);
