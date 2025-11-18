@@ -91,6 +91,11 @@ fn click_multiplier_75() {
     assert!(game.working[0].clicked() > 22);
 }
 
+/// Load possible upgrades from a file
+fn load_upgrades() -> HashMap<String, Upgrade> {
+    HashMap::new()
+}
+
 /// Data needed for the main game loop
 pub struct GameState {
     /// Queue of unfinished tickets
