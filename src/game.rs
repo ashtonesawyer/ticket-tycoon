@@ -118,6 +118,10 @@ impl GameState {
         &self.working
     }
 
+    pub fn multiplier_add(&mut self, amt: f32) {
+        self.multiplier += amt;
+    }
+
     pub fn init_queue(&mut self) {
         for _ in 0..4 {
             self.spawn_ticket();
