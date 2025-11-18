@@ -5,15 +5,16 @@ use dioxus::prelude::*;
 
 pub fn app() -> Element {
     let mut state = use_signal(|| GameState::new());
-    if state.read().working().len() == 0  {state.write().init_queue();}
-    
+    if state.read().working().len() == 0 {
+        state.write().init_queue();
+    }
 
     rsx! {
         Header { cash: state.read().wallet().cash(), xp: state.read().wallet().xp() }
         Queue { queue: state.read().working().to_vec(), on_click: move |i| {
             state.write().click_ticket(i)
             }
-        } 
+        }
     }
 }
 

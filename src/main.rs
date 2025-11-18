@@ -1,7 +1,7 @@
+mod app;
 mod currency;
 mod game;
 mod ticket;
-mod app;
 
 use dioxus;
 
