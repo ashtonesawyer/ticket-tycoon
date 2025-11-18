@@ -17,7 +17,7 @@ fn hard_web() {
 #[test]
 fn click_it() {
     let mut ticket = Ticket::new(Difficulty::Hard, Category::Web, "name");
-    ticket.click();
+    ticket.click(1);
     assert_eq!(ticket.clicked(), 1);
 }
 
@@ -25,14 +25,14 @@ fn click_it() {
 fn click_it_many() {
     let mut ticket = Ticket::new(Difficulty::Easy, Category::Web, "name");
     for _ in 0..5 {
-        ticket.click();
+        ticket.click(1);
     }
     assert_eq!(ticket.clicked(), 5);
 }
 
 #[test]
 fn not_complete() {
-    let mut ticket = Ticket::new(Difficulty::Easy, Category::Web, "name");
+    let ticket = Ticket::new(Difficulty::Easy, Category::Web, "name");
     assert_eq!(ticket.is_complete(), false);
 }
 
@@ -40,7 +40,7 @@ fn not_complete() {
 fn easy_complete() {
     let mut ticket = Ticket::new(Difficulty::Easy, Category::Web, "name");
     for _ in 0..6 {
-        ticket.click();
+        ticket.click(1);
     }
     assert_eq!(ticket.is_complete(), true);
 }
@@ -50,7 +50,7 @@ fn med_complete() {
     let mut ticket = Ticket::new(Difficulty::Med, Category::Web, "name");
     assert_eq!(ticket.is_complete(), false);
     for _ in 0..16 {
-        ticket.click();
+        ticket.click(1);
     }
     assert_eq!(ticket.is_complete(), true);
 }
@@ -60,17 +60,29 @@ fn hard_complete() {
     let mut ticket = Ticket::new(Difficulty::Hard, Category::Web, "name");
     assert_eq!(ticket.is_complete(), false);
     for _ in 0..31 {
-        ticket.click();
+        ticket.click(1);
     }
     assert_eq!(ticket.is_complete(), true);
 }
 
 #[test]
 fn equality() {
-    assert_eq!(Ticket::new(Difficulty::Easy, Category::Web, "name"), Ticket::new(Difficulty::Easy, Category::Web, "name"));
-    assert!(Ticket::new(Difficulty::Easy, Category::Web, "name") != Ticket::new(Difficulty::Easy, Category::Web, "name1"));
-    assert!(Ticket::new(Difficulty::Easy, Category::Web, "name") != Ticket::new(Difficulty::Hard, Category::Web, "name"));
-    assert!(Ticket::new(Difficulty::Easy, Category::Web, "name") != Ticket::new(Difficulty::Easy, Category::Misc, "name"));
+    assert_eq!(
+        Ticket::new(Difficulty::Easy, Category::Web, "name"),
+        Ticket::new(Difficulty::Easy, Category::Web, "name")
+    );
+    assert!(
+        Ticket::new(Difficulty::Easy, Category::Web, "name")
+            != Ticket::new(Difficulty::Easy, Category::Web, "name1")
+    );
+    assert!(
+        Ticket::new(Difficulty::Easy, Category::Web, "name")
+            != Ticket::new(Difficulty::Hard, Category::Web, "name")
+    );
+    assert!(
+        Ticket::new(Difficulty::Easy, Category::Web, "name")
+            != Ticket::new(Difficulty::Easy, Category::Misc, "name")
+    );
 }
 
 /// How difficult a ticket is to complete
@@ -118,7 +130,7 @@ impl Ticket {
                 Difficulty::Easy => 5,
                 Difficulty::Med => 15,
                 Difficulty::Hard => 30,
-            }
+            },
         }
     }
 
@@ -146,8 +158,8 @@ impl Ticket {
     }
 
     /// Click the ticket one time
-    pub fn click(&mut self) {
-        self.clicked += 1;
+    pub fn click(&mut self, i: u16) {
+        self.clicked += i;
     }
 
     /// Check if a ticket has been clicked enough to be completed
