@@ -1,7 +1,10 @@
 use crate::currency::*;
 use crate::ticket::*;
+use crate::upgrade::*;
 
 use rand::Rng;
+use std::collections::HashMap;
+use std::collections::HashSet;
 
 #[test]
 fn empty() {
@@ -98,6 +101,10 @@ pub struct GameState {
     working: Vec<Ticket>,
     /// How many "clicks" per user-click
     multiplier: f32,
+    /// All possible upgrades mapped by name
+    upgrades: HashMap<String, Upgrade>,
+    /// Name of any purchased upgrades
+    purchased: HashSet<String>,
 }
 
 impl GameState {
@@ -107,6 +114,8 @@ impl GameState {
             wallet: Currency::new(),
             working: Vec::new(),
             multiplier: 1.0,
+            upgrades: load_upgrades(),
+            purchased: HashSet::new(),
         }
     }
 
