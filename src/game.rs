@@ -298,6 +298,6 @@ impl GameState {
     /// Update the GameStruct with the provided effects
     /// Should only be called from buy_upgrade()
     fn apply_upgrade(&mut self, effects: &Effects) {
-        todo!();
+        self.multiplier *= effects.inc_multiplier;
     }
 }
