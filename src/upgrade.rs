@@ -68,7 +68,7 @@ fn from_json() {
 }
 
 /// Possible effects that improvements can have
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Effects {
     /// how much to increase the click multiplier
     pub inc_multiplier: f32,

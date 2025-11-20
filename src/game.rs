@@ -5,7 +5,6 @@ use crate::upgrade::*;
 use rand::Rng;
 use std::collections::HashMap;
 use std::collections::HashSet;
-use serde_json::Result;
 use std::fs::File;
 use std::io::BufReader;
 use std::io::prelude::*;
@@ -17,6 +16,28 @@ fn empty() {
     assert_eq!(game.wallet.cash(), 0);
     assert_eq!(game.wallet.xp(), 0);
     assert_eq!(game.working.len(), 0);
+}
+
+#[test]
+fn load_hashmap() {
+    let game = GameState::new();
+    assert!(game.upgrades.contains_key("ergonomic_mousepad"));
+    let mut cost = Currency::new();
+    cost.add_cash(90);
+    assert_eq!(
+        game.upgrades.get("ergonomic_mousepad"),
+        Some(Upgrade {
+            id: "ergonomic_mousepad".to_string(),
+            name: "Ergonomic Mousepad".to_string(),
+            desc: "Gel wrist support: for when you're 25 but feel 65.".to_string(),
+            cost: cost,
+            requires: vec!["slightly_less_terrible_mouse".to_string()],
+            effects: Effects {
+                inc_multiplier: 1.12
+            }
+        })
+        .as_ref()
+    );
 }
 
 #[test]
@@ -95,12 +116,25 @@ fn click_multiplier_75() {
     assert!(game.working[0].clicked() > 22);
 }
 
+pub enum BuyError {
+    Wallet(WalletError),
+    UpgradeUnavailable,
+}
+
+impl From<WalletError> for BuyError {
+    fn from(err: WalletError) -> Self {
+        BuyError::Wallet(err)
+    }
+}
+
 /// Read upgrades.json and return the contents
 fn read_upgrades() -> Vec<Upgrade> {
     let file = File::open("src/upgrades.json").expect("Could not open upgrades.json");
     let mut buf_reader = BufReader::new(file);
     let mut contents = String::new();
-    buf_reader.read_to_string(&mut contents).expect("Could not read upgrades.json");
+    buf_reader
+        .read_to_string(&mut contents)
+        .expect("Could not read upgrades.json");
     serde_json::from_str(&contents).unwrap()
 }
 
@@ -124,9 +158,9 @@ pub struct GameState {
     working: Vec<Ticket>,
     /// How many "clicks" per user-click
     multiplier: f32,
-    /// All possible upgrades mapped by name
+    /// All possible upgrades mapped by ID
     upgrades: HashMap<String, Upgrade>,
-    /// Name of any purchased upgrades
+    /// ID of any purchased upgrades
     purchased: HashSet<String>,
 }
 
@@ -211,5 +245,59 @@ impl GameState {
         }
         // Remove finished tickets
         self.working.retain(|t| !t.is_complete());
+    }
+
+    /// Check if an upgrade is available to buy
+    /// It's available to buy if:
+    /// - It exists in the upgrade hashmap
+    /// - It has not already been purchased
+    /// - All of its prerequisite purchases have been made
+    /// Note that it does **not** check if the upgrade can be afforded
+    pub fn upgrade_available(&self, id: &String) -> bool {
+        // already bought it, can't buy it again
+        if self.purchased.contains(id) {
+            return false;
+        };
+        // not there, can't buy it
+        if !self.upgrades.contains_key(id) {
+            return false;
+        };
+
+        let met_prereqs = self
+            .upgrades
+            .get(id)
+            .unwrap()
+            .requires
+            .iter()
+            .all(|req| self.purchased.contains(req));
+        met_prereqs
+    }
+
+    /// Buy an upgrade and apply its effects
+    /// Will return an error if:
+    /// - Upgrade isn't available
+    /// - Upgrade is too expensive
+    pub fn buy_upgrade(&mut self, id: &String) -> Result<(), BuyError> {
+        // this checks if the id exists as a key, so unwrap() can be used safely later
+        if !self.upgrade_available(id) {
+            return Err(BuyError::UpgradeUnavailable);
+        }
+
+        let effects = {
+            let upgrade = self.upgrades.get(id).unwrap();
+            self.wallet.rm_cash(upgrade.cost.cash())?;
+            self.wallet.rm_xp(upgrade.cost.xp())?;
+            self.purchased.insert(upgrade.id.clone());
+            upgrade.effects.clone()
+        };
+        self.apply_upgrade(&effects);
+
+        Ok(())
+    }
+
+    /// Update the GameStruct with the provided effects
+    /// Should only be called from buy_upgrade()
+    fn apply_upgrade(&mut self, effects: &Effects) {
+        todo!();
     }
 }
