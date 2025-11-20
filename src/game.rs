@@ -5,6 +5,10 @@ use crate::upgrade::*;
 use rand::Rng;
 use std::collections::HashMap;
 use std::collections::HashSet;
+use serde_json::Result;
+use std::fs::File;
+use std::io::BufReader;
+use std::io::prelude::*;
 
 #[test]
 fn empty() {
@@ -91,9 +95,23 @@ fn click_multiplier_75() {
     assert!(game.working[0].clicked() > 22);
 }
 
-/// Load possible upgrades from a file
+/// Read upgrades.json and return the contents
+fn read_upgrades() -> Vec<Upgrade> {
+    let file = File::open("src/upgrades.json").expect("Could not open upgrades.json");
+    let mut buf_reader = BufReader::new(file);
+    let mut contents = String::new();
+    buf_reader.read_to_string(&mut contents).expect("Could not read upgrades.json");
+    serde_json::from_str(&contents).unwrap()
+}
+
+/// Load upgrades from file and load into hashmap
 fn load_upgrades() -> HashMap<String, Upgrade> {
-    HashMap::new()
+    let upgrades = read_upgrades();
+    let mut hash = HashMap::new();
+    for upgrade in upgrades {
+        hash.insert(upgrade.id.clone(), upgrade);
+    }
+    hash
 }
 
 /// Data needed for the main game loop

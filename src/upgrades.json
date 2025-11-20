@@ -1,0 +1,57 @@
+[
+  {
+    "id": "wrist_stretch_reminder",
+    "name": "Wrist Stretch Reminder",
+    "desc": "You remember to stretch once per day. Once.",
+    "category": "personal",
+    "cost": { "cash": 0, "xp": 30 },
+    "requires": [],
+    "effects": {
+      "inc_multiplier": 1.08
+    }
+  },
+  {
+    "id": "slightly_less_terrible_mouse",
+    "name": "Slightly Less Terrible Mouse",
+    "desc": "It barely double-clicks on its own now.",
+    "category": "hardware",
+    "cost": { "cash": 40, "xp": 0 },
+    "requires": [],
+    "effects": {
+      "inc_multiplier": 1.06
+    }
+  },
+  {
+    "id": "ergonomic_mousepad",
+    "name": "Ergonomic Mousepad",
+    "desc": "Gel wrist support: for when you're 25 but feel 65.",
+    "category": "hardware",
+    "cost": { "cash": 90, "xp": 0 },
+    "requires": ["slightly_less_terrible_mouse"],
+    "effects": {
+      "inc_multiplier": 1.12
+    }
+  },
+  {
+    "id": "better_chair_cushion",
+    "name": "Better Desk Chair Cushion",
+    "desc": "Your back stops screaming long enough to click slightly harder.",
+    "category": "personal",
+    "cost": { "cash": 0, "xp": 50 },
+    "requires": ["wrist_stretch_reminder"],
+    "effects": {
+      "inc_multiplier": 1.10
+    }
+  },
+  {
+    "id": "extra_loud_mech_keyboard",
+    "name": "Extra-Loud Mechanical Keyboard",
+    "desc": "MX Blues. Everyone hates you, but wow are they clicky.",
+    "category": "hardware",
+    "cost": { "cash": 150, "xp": 0 },
+    "requires": ["ergonomic_mousepad"],
+    "effects": {
+      "inc_multiplier": 1.20
+    }
+  }
+]
