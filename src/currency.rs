@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 #[test]
 fn empty() {
     let wallet = Currency::new();
@@ -49,7 +51,7 @@ fn failed_rm_xp() {
     assert!(wallet.rm_xp(10).is_none());
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Currency {
     cash: u64,
     xp: u64,
