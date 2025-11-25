@@ -32,9 +32,7 @@ fn load_hashmap() {
             desc: "Gel wrist support: for when you're 25 but feel 65.".to_string(),
             cost: cost,
             requires: vec!["slightly_less_terrible_mouse".to_string()],
-            effects: Effects {
-                inc_multiplier: 1.12
-            }
+            effects: vec![Effects::IncMultiplier(1.12)]
         })
         .as_ref()
     );
@@ -356,7 +354,12 @@ impl GameState {
 
     /// Update the GameStruct with the provided effects
     /// Should only be called from buy_upgrade()
-    fn apply_upgrade(&mut self, effects: &Effects) {
-        self.multiplier *= effects.inc_multiplier;
+    fn apply_upgrade(&mut self, effects: &Vec<Effects>) {
+        for up in effects {
+            match up {
+                Effects::IncMultiplier(x) => self.multiplier *= x,
+                Effects::AutoSolve(diff, cat) => continue,
+            }
+        }
     }
 }

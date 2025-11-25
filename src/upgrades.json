@@ -3,55 +3,98 @@
     "id": "wrist_stretch_reminder",
     "name": "Wrist Stretch Reminder",
     "desc": "You remember to stretch once per day. Once.",
-    "category": "personal",
     "cost": { "cash": 0, "xp": 30 },
     "requires": [],
-    "effects": {
-      "inc_multiplier": 1.08
-    }
+    "effects": [
+      { "IncMultiplier": 1.08 }
+    ]
   },
   {
     "id": "slightly_less_terrible_mouse",
     "name": "Slightly Less Terrible Mouse",
     "desc": "It barely double-clicks on its own now.",
-    "category": "hardware",
     "cost": { "cash": 40, "xp": 0 },
     "requires": [],
-    "effects": {
-      "inc_multiplier": 1.06
-    }
+    "effects": [
+      { "IncMultiplier": 1.06 }
+    ]
   },
   {
     "id": "ergonomic_mousepad",
     "name": "Ergonomic Mousepad",
     "desc": "Gel wrist support: for when you're 25 but feel 65.",
-    "category": "hardware",
     "cost": { "cash": 90, "xp": 0 },
     "requires": ["slightly_less_terrible_mouse"],
-    "effects": {
-      "inc_multiplier": 1.12
-    }
+    "effects": [
+      { "IncMultiplier": 1.12 }
+    ]
   },
   {
     "id": "better_chair_cushion",
     "name": "Better Desk Chair Cushion",
     "desc": "Your back stops screaming long enough to click slightly harder.",
-    "category": "personal",
     "cost": { "cash": 0, "xp": 50 },
     "requires": ["wrist_stretch_reminder"],
-    "effects": {
-      "inc_multiplier": 1.10
-    }
+    "effects": [
+      { "IncMultiplier": 1.10 }
+    ]
   },
   {
     "id": "extra_loud_mech_keyboard",
     "name": "Extra-Loud Mechanical Keyboard",
     "desc": "MX Blues. Everyone hates you, but wow are they clicky.",
-    "category": "hardware",
     "cost": { "cash": 150, "xp": 0 },
-    "requires": ["ergonomic_mousepad"],
-    "effects": {
-      "inc_multiplier": 1.20
-    }
-  }
+    "requires": ["ergonomic_mousepad", "better_chair_cushion"],
+    "effects": [
+      { "IncMultiplier": 1.20 }
+    ]
+  },
+  {
+    "id": "autosolve_easy_misc",
+    "name": "Password Resetifier 3000",
+    "desc": "Your new auto-responder can help solve easy miscellaneous tickets.",
+    "cost": { "cash": 300, "xp": 30 },
+    "requires": ["extra_loud_mech_keyboard"],
+    "effects": [ {"IncMultiplier": 0.0}, {"AutoSolve": ["Easy", "Misc"]} ]
+  },
+  {
+    "id": "autosolve_easy_web",
+    "name": "Link Scraper",
+    "desc": "Your new auto-responder can help resolve easy web tickets.",
+    "cost": { "cash": 400, "xp": 40 },
+    "requires": ["autosolve_easy_misc"],
+    "effects": [ {"IncMultiplier": 0.0}, {"AutoSolve": ["Easy", "Web"]} ]
+  },
+  {
+    "id": "autosolve_easy_windows",
+    "name": "Reboot Robot",
+    "desc": "Your new auto-responder can help resolve easy Windows tickets.",
+    "cost": { "cash": 600, "xp": 60 },
+    "requires": ["autosolve_easy_web"],
+    "effects": [{ "AutoSolve": ["Easy", "Windows"]} ]
+  },
+  {
+    "id": "autosolve_easy_linux",
+    "name": "Sudo Sidekick",
+    "desc": "Your new auto-responder can help resolve easy Linux tickets.",
+    "cost": { "cash": 700, "xp": 70 },
+    "requires": ["autosolve_easy_web"],
+    "effects": [{ "AutoSolve": ["Easy", "Linux"]} ]
+  },
+  {
+    "id": "autosolve_easy_network",
+    "name": "WiFi Wrangler",
+    "desc": "Your new auto-responder can help resolve easy network tickets.",
+    "cost": { "cash": 500, "xp": 50 },
+    "requires": ["autosolve_easy_linux"],
+    "effects": [ {"AutoSolve": ["Easy", "Network"]} ]
+  },
+  {
+    "id": "autosolve_med_network",
+    "name": "Network Pro Resolver",
+    "desc": "Your new script can help automatically fininsh medium network tickets.",
+    "cost": { "cash": 1500, "xp": 150 },
+    "requires": ["autosolve_easy_network", "autosolve_easy_windows"],
+    "effects": [ {"AutoSolve": ["Med", "Network"]} ]
+  }  
 ]

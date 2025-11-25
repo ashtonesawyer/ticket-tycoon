@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 #[test]
 fn easy_network() {
     let ticket = Ticket::new(Difficulty::Easy, Category::Network, "name");
@@ -86,7 +88,7 @@ fn equality() {
 }
 
 /// How difficult a ticket is to complete
-#[derive(Debug, PartialEq, Clone, Copy)]
+#[derive(Debug, PartialEq, Clone, Copy, Deserialize, Serialize)]
 pub enum Difficulty {
     Easy,
     Med,
@@ -94,7 +96,7 @@ pub enum Difficulty {
 }
 
 /// Categories that tickets can full under
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Deserialize, Serialize)]
 pub enum Category {
     Network,
     Windows,
