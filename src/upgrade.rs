@@ -85,7 +85,7 @@ pub struct Upgrade {
     pub desc: String,
     /// Cost in cash + xp
     pub cost: Currency,
-    /// What upgrades are needed before it becomes available
+    /// ID of upgrades that are needed before this becomes available
     pub requires: Vec<String>,
     /// What the upgrade actually does
     pub effects: Effects,

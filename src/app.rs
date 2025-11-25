@@ -1,7 +1,7 @@
+use crate::currency::WalletError;
 use crate::game::*;
 use crate::ticket::*;
 use crate::upgrade::*;
-use crate::currency::WalletError;
 
 use dioxus::prelude::*;
 
@@ -21,7 +21,7 @@ pub fn app() -> Element {
             state.write().click_ticket(i)
             }
         }
-        Upgrades { upgrades: state.read().avail_upgrades(), on_click: move |id| { 
+        Upgrades { upgrades: state.read().avail_upgrades(), on_click: move |id| {
             error.set(String::new());
             match state.write().buy_upgrade(&id) {
                 Ok(()) => {return},
@@ -84,7 +84,7 @@ fn Upgrades(upgrades: Vec<Upgrade>, on_click: EventHandler<String>) -> Element {
                 {
                     let id = upgrade.id.clone();
                     rsx! {
-                        div { 
+                        div {
                             key: "{i}",
                             h3 { "{upgrade.name}" }
                             p  { "{upgrade.desc}" }

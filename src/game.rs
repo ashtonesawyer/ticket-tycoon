@@ -273,6 +273,7 @@ impl GameState {
         met_prereqs
     }
 
+    /// Get a list of currently available upgrades
     pub fn avail_upgrades(&self) -> Vec<Upgrade> {
         let mut avail = Vec::new();
 
