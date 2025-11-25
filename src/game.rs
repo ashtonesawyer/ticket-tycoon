@@ -253,7 +253,7 @@ impl GameState {
     /// - It has not already been purchased
     /// - All of its prerequisite purchases have been made
     /// Note that it does **not** check if the upgrade can be afforded
-    pub fn upgrade_available(&self, id: &String) -> bool {
+    fn upgrade_available(&self, id: &String) -> bool {
         // already bought it, can't buy it again
         if self.purchased.contains(id) {
             return false;
@@ -271,6 +271,17 @@ impl GameState {
             .iter()
             .all(|req| self.purchased.contains(req));
         met_prereqs
+    }
+
+    pub fn avail_upgrades(&self) -> Vec<Upgrade> {
+        let mut avail = Vec::new();
+
+        for (key, val) in self.upgrades.iter() {
+            if self.upgrade_available(&key) {
+                avail.push(val.clone());
+            }
+        }
+        avail
     }
 
     /// Buy an upgrade and apply its effects

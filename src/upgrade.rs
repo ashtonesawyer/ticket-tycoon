@@ -75,7 +75,7 @@ pub struct Effects {
 }
 
 /// Information needed for buying/applying upgrades
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Upgrade {
     /// Unique ID for the upgrade (internal)
     pub id: String,
