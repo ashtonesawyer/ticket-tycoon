@@ -116,6 +116,41 @@ fn click_multiplier_75() {
     assert!(game.working[0].clicked() > 22);
 }
 
+#[test]
+fn upgrade_happy() {
+    let mut game = GameState::new();
+    game.wallet.add_xp(30);
+    assert!(game.buy_upgrade(&"wrist_stretch_reminder".to_string()).is_ok());
+    assert_eq!(game.wallet.xp(), 0);
+}
+
+#[test]
+fn upgrade_unavail() {
+    let mut game = GameState::new();
+    assert!(game.buy_upgrade(&"fake_upgrade_id".to_string()).is_err_and(|x| match x {
+        BuyError::UpgradeUnavailable => true,
+        _ => false,
+    }));
+}
+
+#[test]
+fn upgrade_insuff_cash() {
+    let mut game = GameState::new();
+    assert!(game.buy_upgrade(&"slightly_less_terrible_mouse".to_string()).is_err_and(|x| match x {
+        BuyError::Wallet(WalletError::InsufficientCash) => true,
+        _ => false,
+    }));
+}
+
+#[test]
+fn upgrade_insuff_xp() {
+    let mut game = GameState::new();
+    assert!(game.buy_upgrade(&"wrist_stretch_reminder".to_string()).is_err_and(|x| match x {
+        BuyError::Wallet(WalletError::InsufficientXP) => true,
+        _ => false,
+    }));
+}
+
 pub enum BuyError {
     Wallet(WalletError),
     UpgradeUnavailable,
