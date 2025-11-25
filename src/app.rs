@@ -5,6 +5,10 @@ use crate::upgrade::*;
 
 use dioxus::prelude::*;
 
+// For future reference:
+// https://dioxuslabs.com/learn/0.7/essentials/basics/async
+// Use spawn_forever or std::thread::spawn to handle autocomplete (+ future async tasks)
+
 pub fn app() -> Element {
     let mut state = use_signal(|| GameState::new());
     let mut error = use_signal(|| String::new());
