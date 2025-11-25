@@ -1,5 +1,5 @@
 use crate::currency::*;
-use crate::ticket::{Difficulty, Category};
+use crate::ticket::{Category, Difficulty};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Result;
@@ -20,7 +20,10 @@ fn to_json() {
         "This is just a test",
         Currency::new(),
         vec!["some-upgrade".to_string(), "some-other-upgrade".to_string()],
-        vec![Effects::IncMultiplier(0.2), Effects::AutoSolve(Difficulty::Easy, Category::Misc)],
+        vec![
+            Effects::IncMultiplier(0.2),
+            Effects::AutoSolve(Difficulty::Easy, Category::Misc),
+        ],
     );
     let json1 = serde_json::to_string(&upgrade1).unwrap();
     let json2 = serde_json::to_string(&upgrade2).unwrap();
@@ -54,7 +57,10 @@ fn from_json() {
         "This is just a test",
         Currency::new(),
         vec!["some-upgrade".to_string(), "some-other-upgrade".to_string()],
-        vec![Effects::IncMultiplier(0.2), Effects::AutoSolve(Difficulty::Easy, Category::Misc)],
+        vec![
+            Effects::IncMultiplier(0.2),
+            Effects::AutoSolve(Difficulty::Easy, Category::Misc),
+        ],
     );
     assert_eq!(parsed1, upgrade1);
     assert_eq!(parsed2, upgrade2);
