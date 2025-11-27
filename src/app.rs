@@ -3,19 +3,30 @@ use crate::game::*;
 use crate::ticket::*;
 use crate::upgrade::*;
 
-use dioxus::prelude::*;
-
-// For future reference:
-// https://dioxuslabs.com/learn/0.7/essentials/basics/async
-// Use spawn_forever or std::thread::spawn to handle autocomplete (+ future async tasks)
+use dioxus::{logger::tracing::info, prelude::*};
+use std::time::Duration;
+use tokio::time::sleep;
 
 pub fn app() -> Element {
     let mut state = use_signal(|| GameState::new());
     let mut error = use_signal(|| String::new());
 
+    // info!("{:?}", state());
+
     if state.read().working().len() == 0 {
         state.write().init_queue();
     }
+
+    // use_interval(Duration::from_secs(2), move |_| state.write().autosolve());
+
+    use_future(move || async move {
+        loop {
+            let mut s = state();
+            s.autosolve();
+            state.set(s);
+            sleep(Duration::from_secs(2)).await;
+        }
+    });
 
     rsx! {
         Header { cash: state.read().wallet().cash(), xp: state.read().wallet().xp() }

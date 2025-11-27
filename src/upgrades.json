@@ -55,7 +55,7 @@
     "desc": "Your new auto-responder can help solve easy miscellaneous tickets.",
     "cost": { "cash": 300, "xp": 30 },
     "requires": ["extra_loud_mech_keyboard"],
-    "effects": [ {"IncMultiplier": 0.0}, {"AutoSolve": ["Easy", "Misc"]} ]
+    "effects": [ {"AutoSolve": ["Easy", "Misc"]} ]
   },
   {
     "id": "autosolve_easy_web",
@@ -63,7 +63,7 @@
     "desc": "Your new auto-responder can help resolve easy web tickets.",
     "cost": { "cash": 400, "xp": 40 },
     "requires": ["autosolve_easy_misc"],
-    "effects": [ {"IncMultiplier": 0.0}, {"AutoSolve": ["Easy", "Web"]} ]
+    "effects": [ {"AutoSolve": ["Easy", "Web"]} ]
   },
   {
     "id": "autosolve_easy_windows",

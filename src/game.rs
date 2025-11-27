@@ -251,6 +251,7 @@ fn load_upgrades() -> HashMap<String, Upgrade> {
 }
 
 /// Data needed for the main game loop
+#[derive(Clone, Debug)]
 pub struct GameState {
     /// Queue of unfinished tickets
     queue: Vec<Ticket>,
@@ -356,7 +357,7 @@ impl GameState {
     /// bought autosolve upgrades
     pub fn autosolve(&mut self) {
         for (diff, cat) in &self.autosolve {
-            for mut ticket in &mut self.working {
+            for ticket in &mut self.working {
                 if ticket.difficulty() == diff && ticket.category() == cat {
                     ticket.click(1);
                 }
