@@ -161,6 +161,63 @@ fn upgrade_insuff_xp() {
     );
 }
 
+#[test]
+fn autosolve_none() {
+    let mut game = GameState::new();
+    game.init_queue();
+    for _ in 0..30 {
+        game.autosolve();
+    }
+    for ticket in game.working {
+        assert_eq!(ticket.clicked(), 0);
+    }
+}
+
+#[test]
+fn autosolve_one() {
+    let mut game = GameState::new();
+    game.init_queue();
+    let diff = game.working[0].difficulty();
+    let cat = game.working[0].category();
+    game.autosolve.push((diff.clone(), cat.clone()));
+    for _ in 0..4 {
+        game.autosolve();
+    }
+    assert_eq!(game.working[0].clicked(), 4);
+}
+
+#[test]
+fn autosolve_dup() {
+    let mut game = GameState::new();
+    game.init_queue();
+    game.working.push(game.working[0].clone());
+    let diff = game.working[0].difficulty();
+    let cat = game.working[0].category();
+    game.autosolve.push((diff.clone(), cat.clone()));
+    for _ in 0..4 {
+        game.autosolve();
+    }
+    assert_eq!(game.working[0].clicked(), 4);
+    assert_eq!(game.working[4].clicked(), 4);
+}
+
+#[test]
+fn autosolve_two() {
+    let mut game = GameState::new();
+    game.init_queue();
+    let diff = game.working[0].difficulty();
+    let cat = game.working[0].category();
+    let diff1 = game.working[1].difficulty();
+    let cat1 = game.working[1].category();
+    game.autosolve.push((diff.clone(), cat.clone()));
+    game.autosolve.push((diff1.clone(), cat1.clone()));
+    for _ in 0..4 {
+        game.autosolve();
+    }
+    assert_eq!(game.working[0].clicked(), 4);
+    assert_eq!(game.working[1].clicked(), 4);
+}
+
 pub enum BuyError {
     Wallet(WalletError),
     UpgradeUnavailable,
@@ -203,6 +260,8 @@ pub struct GameState {
     working: Vec<Ticket>,
     /// How many "clicks" per user-click
     multiplier: f32,
+    /// What difficulty + category combos have autosolve enabled
+    autosolve: Vec<(Difficulty, Category)>,
     /// All possible upgrades mapped by ID
     upgrades: HashMap<String, Upgrade>,
     /// ID of any purchased upgrades
@@ -216,6 +275,7 @@ impl GameState {
             wallet: Currency::new(),
             working: Vec::new(),
             multiplier: 1.0,
+            autosolve: Vec::new(),
             upgrades: load_upgrades(),
             purchased: HashSet::new(),
         }
@@ -292,6 +352,18 @@ impl GameState {
         self.working.retain(|t| !t.is_complete());
     }
 
+    /// Click once on any ticket that is available and matches the currently
+    /// bought autosolve upgrades
+    pub fn autosolve(&mut self) {
+        for (diff, cat) in &self.autosolve {
+            for mut ticket in &mut self.working {
+                if ticket.difficulty() == diff && ticket.category() == cat {
+                    ticket.click(1);
+                }
+            }
+        }
+    }
+
     /// Check if an upgrade is available to buy
     /// It's available to buy if:
     /// - It exists in the upgrade hashmap
@@ -358,7 +430,7 @@ impl GameState {
         for up in effects {
             match up {
                 Effects::IncMultiplier(x) => self.multiplier *= x,
-                Effects::AutoSolve(diff, cat) => continue,
+                Effects::AutoSolve(diff, cat) => self.autosolve.push((diff.clone(), cat.clone())),
             }
         }
     }
