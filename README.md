@@ -40,3 +40,32 @@ implement. I ended up changing to and enum because of the autosolve effect. If
 I had kept effects as a struct, I would have had to use some sort of Option to
 deal with upgrades that aren't supposed to do any autosolving and that seemed 
 like more trouble than it was worth. 
+
+## async
+I spent at least two and a half hours trying to debug a problem that I thought
+was happening with my async `autosolve` code but was actually caused by values
+in `upgrades.json`. 
+
+Essentially, I was running into a strange error where my game would work as
+expected up until I bought the first autosolve upgrade. After that, the
+autosolve would be working, but clicking the `work` buttons on the tickets did
+nothing. I thought it might be related to locks or signal updates not 
+propogating correctly and spent a very long time trying different 
+configurations to see what might work. Eventually, I commented out all of my 
+async code and started playing the game again just because I needed something
+to take my mind off of the immediate problem. When I bought the first autosolve
+upgrade, again my tickets stopped working. This meant that the problem couldn't
+be in the async code. I looked through my autosolve method for the game struct
+and didn't see anything wrong with it. 
+
+I decided to turn on dioxus logging so I could try and see if the struct was 
+being updated incorrectly. A part of printing the struct was also printing 
+all of the upgrades, and I noticed on some of them `IncMultiplier(0.0)`. 
+This was leftover from when I was adding to the multiplier, and also a little
+from when effects was a struct and not an enum. It multiplied my click 
+multiplier by 0, rendering all clicks absolutely useless. 
+
+I don't think I would have ever though on my own to look at `upgrades.json` and
+make sure that it was as expected. So here's a reminder to thoroughly update
+data files when code changes happen to save yourself and *incredibly* 
+frustrating evening. 
