@@ -304,18 +304,18 @@ impl GameState {
     /// Add a random new ticket to the queue
     pub fn spawn_ticket(&mut self) {
         let mut rng = rand::rng();
-        let difficulty = match rng.random_range(0..3) {
-            0 => Difficulty::Easy,
-            1 => Difficulty::Med,
-            2 => Difficulty::Hard,
+        let difficulty = match rng.random_range(0..10) {
+            0..=3 => Difficulty::Easy,
+            4..=6 => Difficulty::Med,
+            7..=10 => Difficulty::Hard,
             _ => panic!("Random number generated outside of range"),
         };
-        let category = match rng.random_range(0..5) {
-            0 => Category::Network,
-            1 => Category::Windows,
-            2 => Category::Linux,
-            3 => Category::Web,
-            4 => Category::Misc,
+        let category = match rng.random_range(0..20) {
+            0..=6 => Category::Misc,
+            7..=10 => Category::Windows,
+            11..=13 => Category::Linux,
+            14..=16 => Category::Network,
+            17..=20 => Category::Web,
             _ => panic!("Random number generated outside of range"),
         };
         let name = format!("{:?} issue #{:04}", category, rng.random_range(1000..9999));

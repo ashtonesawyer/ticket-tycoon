@@ -24,7 +24,7 @@ pub fn app() -> Element {
             let mut s = state();
             s.autosolve();
             state.set(s);
-            sleep(Duration::from_secs(2)).await;
+            sleep(Duration::from_secs(1)).await;
         }
     });
 
