@@ -69,3 +69,12 @@ I don't think I would have ever though on my own to look at `upgrades.json` and
 make sure that it was as expected. So here's a reminder to thoroughly update
 data files when code changes happen to save yourself and *incredibly* 
 frustrating evening. 
+
+## Finishing Tickets
+I was getting something where when a ticket is being autosolved, I needed to
+click the work button on one of the tickets one more time before they would
+be removed from the queue. I'm not entirely sure why that was happing. I think
+a simple enough solution would be to change the work button into a finish 
+button when the progress bar is at 100%, and have a more explicite "finish
+this ticket" function than the automatic removal that I have now as a part
+of the click function. 
