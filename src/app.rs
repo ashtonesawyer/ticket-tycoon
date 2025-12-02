@@ -110,7 +110,7 @@ fn Queue(queue: Vec<Ticket>, on_click: EventHandler<usize>) -> Element {
 
                                 ProgBar { pct }
                                 {
-                                    let text = if pct == 100.0 { "Finish" } else { "Work" };
+                                    let text = if pct == 100.0 { "Close" } else { "Work" };
                                     rsx! {
                                         button {
                                             onclick: move |_| on_click.call(i),

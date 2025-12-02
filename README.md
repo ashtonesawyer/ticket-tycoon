@@ -1,15 +1,15 @@
 # Ticket Tycoon
 Ashton Sawyer
 
-# Description
+## Description
 A clicker/idle game based on an IT organization and its help desk.
 
-# Running
+## Running
 This was tested using `dx serve --platform desktop`
 
-# Dev Notes
+## Dev Notes
 
-## Types
+### Types
 The different data types came together fairly seamlessly. The basis of a game
 about completing help desk tickets is the ticket itself, so I started there. 
 Then I needed something to buy upgrades with, so there's the currency. 
@@ -23,7 +23,7 @@ needed I had to be able to see the button that the user would be pressing.
 
 After I got a basic GUI off the ground, I started working on the upgrades.
 
-## Dioxus
+### Dioxus
 I thought about different GUIs for a long time. I had a handful of suggestions
 and wasn't sure what to go with. I used ChatGPT to get a super rough outline
 of a GUI in each of the libraries so I could get an idea of what they looked
@@ -34,14 +34,14 @@ fairly comfortable with CSS, so using it to style components was convenient.
 It's also very well documented and pretty easy to google things for, which is
 nice. 
 
-## Effects: Struct or Enum
+### Effects: Struct or Enum
 Originally I had my upgrades be a struct because it seemed simple and quick to
 implement. I ended up changing to and enum because of the autosolve effect. If
 I had kept effects as a struct, I would have had to use some sort of Option to
 deal with upgrades that aren't supposed to do any autosolving and that seemed 
 like more trouble than it was worth. 
 
-## async
+### async
 I spent at least two and a half hours trying to debug a problem that I thought
 was happening with my async `autosolve` code but was actually caused by values
 in `upgrades.json`. 
@@ -70,11 +70,58 @@ make sure that it was as expected. So here's a reminder to thoroughly update
 data files when code changes happen to save yourself and *incredibly* 
 frustrating evening. 
 
-## Finishing Tickets
-I was getting something where when a ticket is being autosolved, I needed to
-click the work button on one of the tickets one more time before they would
-be removed from the queue. I'm not entirely sure why that was happing. I think
-a simple enough solution would be to change the work button into a finish 
-button when the progress bar is at 100%, and have a more explicite "finish
-this ticket" function than the automatic removal that I have now as a part
-of the click function. 
+### Finishing Tickets
+I was getting something where when a ticket is being worked on, it would get to
+100% and need to be clicked one more time before it would be finished. There
+was also something where autosolved tickets would need something in the ticket
+queue to be clicked on before they would close after they got to 100%. If *any*
+ticket were worked on, all autosolved tickets at 100% would close. 
+
+The first problem is because I have a goal for each ticket, which is used to 
+calculate the completion percent, but the check for `is_complete()` was looking
+for strictly greater than. The second problem was because there isn't a check
+for completion in the autosolve function, and the addendum to the second 
+problem was because any completed tickets were removed on every call to
+`click_ticket()`.  
+
+```rust
+// Original Code
+pub fn click_ticket(&mut self, index: usize) {
+    if let Some(ticket) = self.working.get_mut(index) {
+        ...
+        if ticket.is_complete() {
+            ...
+        }
+    }
+    // Remove finished tickets
+    self.working.retain(|t| !t.is_complete());
+}
+
+// New Code
+pub fn click_ticket(&mut self, index: usize) {
+    ...
+    if ticket.is_complete() {
+        ...
+
+        // Remove finished tickets
+        let _ = self.working.remove(index);
+    }
+}
+```
+
+However, I kept the other two pieces. I could make it so that a ticket 
+automatically closes after it's completed, but I found that it makes it hard to
+keep clicking because all tickets below it will be shifted up in the queue, 
+causing misclicks. To make it make sense to the player, I just have the text on
+the button change from `Work` to `Close` when the progress bar percentage is at
+100. 
+
+### Game State Constants
+When I added the `IncCashMultiplier` and `IncXPMultiplier` upgrade effects, I 
+decided to change the base values to constants rather than only having them in
+`click_ticket()`'s code. I did this mostly for making the unit tests more 
+robust. I know that the game I've made, as I currently have it, isn't very 
+balanced and that these base values should probably be changed for a better
+game experience. If/When that happens, the unit tests would have to be updated.
+In order to only have to change the values in one place, I changed then to 
+`const`s.
