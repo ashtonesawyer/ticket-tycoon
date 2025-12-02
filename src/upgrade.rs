@@ -96,4 +96,3 @@ pub struct Upgrade {
     /// What the upgrade actually does
     pub effects: Vec<Effects>,
 }
-

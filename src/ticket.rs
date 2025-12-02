@@ -96,7 +96,7 @@ pub enum Difficulty {
 }
 
 /// Categories that tickets can full under
-#[derive(Debug, PartialEq, Clone, Deserialize, Serialize)]
+#[derive(Debug, PartialEq, Clone, Copy, Deserialize, Serialize)]
 pub enum Category {
     Network,
     Windows,

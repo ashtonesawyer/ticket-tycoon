@@ -445,8 +445,7 @@ impl GameState {
             return false;
         };
 
-        self
-            .upgrades
+        self.upgrades
             .get(id)
             .unwrap()
             .requires
@@ -494,7 +493,7 @@ impl GameState {
         for up in effects {
             match up {
                 Effects::IncMultiplier(x) => self.multiplier *= x,
-                Effects::AutoSolve(diff, cat) => self.autosolve.push((*diff, cat.clone())),
+                Effects::AutoSolve(diff, cat) => self.autosolve.push((*diff, *cat)),
                 Effects::IncCashMultiplier(x) => self.cash_mult *= x,
                 Effects::IncXPMultiplier(x) => self.xp_mult *= x,
             }
