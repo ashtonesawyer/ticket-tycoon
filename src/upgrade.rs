@@ -71,6 +71,10 @@ fn from_json() {
 pub enum Effects {
     /// how much to increase the click multiplier
     IncMultiplier(f32),
+    /// how much to increase the cash multiplier
+    IncCashMultiplier(f32),
+    /// how much to increase the XP multiplier
+    IncXPMultiplier(f32),
     /// which tickets can be autosolved
     AutoSolve(Difficulty, Category),
 }

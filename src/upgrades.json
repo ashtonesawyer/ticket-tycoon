@@ -96,5 +96,67 @@
     "cost": { "cash": 1500, "xp": 150 },
     "requires": ["autosolve_easy_network", "autosolve_easy_windows"],
     "effects": [ {"AutoSolve": ["Med", "Network"]} ]
-  }  
+  },
+  {
+    "id": "annual_performance_review",
+    "name": "Annual Performance Review",
+    "desc": "Management discovers you're the only one answering tickets. You get a tiny raise.",
+    "cost": { "cash": 50, "xp": 300 },
+    "requires": ["autosolve_med_network"],
+    "effects": [
+      { "IncCashMultiplier": 1.10 }
+    ]
+  },
+  {
+    "id": "quarterly_bonus",
+    "name": "Quarterly Bonus (Somehow)",
+    "desc": "No one knows why you qualified, including you. But hey, it's money.",
+    "cost": { "cash": 100, "xp": 500 },
+    "requires": ["annual_performance_review"],
+    "effects": [
+      { "IncCashMultiplier": 1.15 }
+    ]
+  },
+  {
+    "id": "online_training_course",
+    "name": "Online Training Course",
+    "desc": "You click through 48 slides of corporate nonsense. You still learn something.",
+    "cost": { "cash": 40, "xp": 80 },
+    "requires": ["annual_performance_review"],
+    "effects": [
+      { "IncXPMultiplier": 1.12 }
+    ]
+  },
+  {
+    "id": "pretend_team_lead_duties",
+    "name": "Pretend Team Lead Duties",
+    "desc": "They give you responsibilities but not the title. Classic move.",
+    "cost": { "cash": 10, "xp": 200 },
+    "requires": ["online_training_course"],
+    "effects": [
+      { "IncXPMultiplier": 1.08 },
+      { "IncCashMultiplier": 1.05 }
+    ]
+  },
+  {
+    "id": "improved_ticket_tags",
+    "name": "Improved Ticket Tagging Habits",
+    "desc": "You stop marking everything as 'High Priority'. Miraculously, your workflow improves.",
+    "cost": { "cash": 80, "xp": 40 },
+    "requires": ["annual_performance_review"],
+    "effects": [
+      { "IncXPMultiplier": 1.10 }
+    ]
+  },
+  {
+    "id": "certification_in_something",
+    "name": "Certification in Something",
+    "desc": "You're not sure what it certifies, but recruiters seem impressed.",
+    "cost": { "cash": 120, "xp": 350 },
+    "requires": ["online_training_course"],
+    "effects": [
+      { "IncCashMultiplier": 1.12 },
+      { "IncXPMultiplier": 1.05 }
+    ]
+  }
 ]

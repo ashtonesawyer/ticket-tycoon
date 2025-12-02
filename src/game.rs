@@ -218,6 +218,41 @@ fn autosolve_two() {
     assert_eq!(game.working[1].clicked(), 4);
 }
 
+#[test]
+fn cash_multiplier_25() {
+    let mut game = GameState::new();
+    game.cash_mult += 0.25;
+    for _ in 0..8 {
+        game.working.push(Ticket::new(Difficulty::Easy, Category::Web, "name"));
+    }
+    for _ in 0..8 {
+        for _ in 0..=game.working[0].goal() {
+            game.click_ticket(0);
+        }
+    }
+    assert_eq!(game.working.len(), 0);
+    assert_eq!(game.wallet.xp(), GameState::BASE_EASY_XP * 8);
+    assert!(game.wallet.cash() > (GameState::BASE_EASY_CASH as f32 * 1.25).floor() as u64 * 8);
+    assert!(game.wallet.cash() < (GameState::BASE_EASY_CASH as f32 * 1.25).ceil() as u64 * 8)
+}
+
+fn xp_multiplier_25() {
+    let mut game = GameState::new();
+    game.xp_mult += 0.25;
+    for _ in 0..8 {
+        game.working.push(Ticket::new(Difficulty::Easy, Category::Web, "name"));
+    }
+    for _ in 0..8 {
+        for _ in 0..=game.working[0].goal() {
+            game.click_ticket(0);
+        }
+    }
+    assert_eq!(game.working.len(), 0);
+    assert_eq!(game.wallet.cash(), GameState::BASE_EASY_CASH * 8);
+    assert!(game.wallet.xp() > (GameState::BASE_EASY_XP as f32 * 1.25).floor() as u64 * 8);
+    assert!(game.wallet.xp() < (GameState::BASE_EASY_XP as f32 * 1.25).ceil() as u64 * 8)
+}
+
 pub enum BuyError {
     Wallet(WalletError),
     UpgradeUnavailable,
@@ -286,6 +321,13 @@ pub struct GameState {
 }
 
 impl GameState {
+    const BASE_EASY_CASH: u64 = 10;
+    const BASE_EASY_XP: u64 = 5;
+    const BASE_MED_CASH: u64 = 25;
+    const BASE_MED_XP: u64 = 10;
+    const BASE_HARD_CASH: u64 = 60;
+    const BASE_HARD_XP: u64 = 20;
+
     pub fn new() -> Self {
         Self {
             queue: Vec::new(),
@@ -355,9 +397,9 @@ impl GameState {
             ticket.click(clicks);
             if ticket.is_complete() {
                 let (cash, xp) = match ticket.difficulty() {
-                    Difficulty::Easy => (rand_round(10, self.cash_mult), rand_round(5, self.xp_mult)),
-                    Difficulty::Med => (rand_round(25, self.cash_mult), rand_round(10, self.xp_mult)),
-                    Difficulty::Hard => (rand_round(60, self.cash_mult), rand_round(20, self.xp_mult)),
+                    Difficulty::Easy => (rand_round(Self::BASE_EASY_CASH, self.cash_mult), rand_round(Self::BASE_EASY_XP, self.xp_mult)),
+                    Difficulty::Med => (rand_round(Self::BASE_MED_CASH, self.cash_mult), rand_round(Self::BASE_MED_XP, self.xp_mult)),
+                    Difficulty::Hard => (rand_round(Self::BASE_HARD_CASH, self.cash_mult), rand_round(Self::BASE_HARD_XP, self.xp_mult)),
                 };
                 self.wallet.add_cash(cash);
                 self.wallet.add_xp(xp);
@@ -447,6 +489,8 @@ impl GameState {
             match up {
                 Effects::IncMultiplier(x) => self.multiplier *= x,
                 Effects::AutoSolve(diff, cat) => self.autosolve.push((diff.clone(), cat.clone())),
+                Effects::IncCashMultiplier(x) => self.cash_mult *= x,
+                Effects::IncXPMultiplier(x) => self.xp_mult *= x,
             }
         }
     }
