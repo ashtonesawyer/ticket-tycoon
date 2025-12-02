@@ -347,10 +347,11 @@ impl GameState {
                 };
                 self.wallet.add_cash(cash);
                 self.wallet.add_xp(xp);
+
+                // Remove finished tickets
+                let _ = self.working.remove(index);
             }
         }
-        // Remove finished tickets
-        self.working.retain(|t| !t.is_complete());
     }
 
     /// Click once on any ticket that is available and matches the currently
