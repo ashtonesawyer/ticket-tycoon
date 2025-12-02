@@ -8,12 +8,12 @@ use std::time::Duration;
 use tokio::time::sleep;
 
 pub fn app() -> Element {
-    let mut state = use_signal(|| GameState::new());
-    let mut error = use_signal(|| String::new());
+    let mut state = use_signal(GameState::new);
+    let mut error = use_signal(String::new);
 
     // info!("{:?}", state());
 
-    if state.read().working().len() == 0 {
+    if state.read().working().is_empty() {
         state.write().init_queue();
     }
 
@@ -45,7 +45,7 @@ pub fn app() -> Element {
                 on_click: move |id| {
                     error.set(String::new());
                     match state.write().buy_upgrade(&id) {
-                        Ok(()) => {return},
+                        Ok(()) => {},
                         Err(BuyError::UpgradeUnavailable) => panic!("Should check for availability before showing to user"),
                         Err(BuyError::Wallet(WalletError::InsufficientCash)) => error.set("Not enough cash to buy this upgrade".to_string()),
                         Err(BuyError::Wallet(WalletError::InsufficientXP)) => error.set("Not enough XP to buy this upgrade".to_string()),
@@ -169,7 +169,7 @@ fn Upgrades(upgrades: Vec<Upgrade>, on_click: EventHandler<String>) -> Element {
                                 style: "display: flex; flex-direction: row; justify-content: space-between",
 
                                 {
-                                    let mut cost = match (upgrade.cost.cash(), upgrade.cost.xp()) {
+                                    let cost = match (upgrade.cost.cash(), upgrade.cost.xp()) {
                                         (0, 0) => "".to_string(),
                                         (x, 0) => format!("${}", x),
                                         (0, x) => format!("{} XP", x),

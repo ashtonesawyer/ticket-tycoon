@@ -237,6 +237,7 @@ fn cash_multiplier_25() {
     assert!(game.wallet.cash() < (GameState::BASE_EASY_CASH as f32 * 1.25).ceil() as u64 * 8)
 }
 
+#[test]
 fn xp_multiplier_25() {
     let mut game = GameState::new();
     game.xp_mult += 0.25;
@@ -291,12 +292,11 @@ fn load_upgrades() -> HashMap<String, Upgrade> {
 /// Should round up ((multiplier % 1) * 100)% of the time
 fn rand_round(base: u64, multiplier: f32) -> u64 {
     let mut rng = rand::rng();
-    let ret = if rng.random::<f32>() < (multiplier % 1.0) {
+    if rng.random::<f32>() < (multiplier % 1.0) {
         (base as f32 * multiplier).ceil() as u64
     } else {
         (base as f32 * multiplier).floor() as u64
-    };
-    ret
+    }
 }
 
 /// Data needed for the main game loop
@@ -352,10 +352,6 @@ impl GameState {
         &self.working
     }
 
-    pub fn multiplier_add(&mut self, amt: f32) {
-        self.multiplier += amt;
-    }
-
     pub fn init_queue(&mut self) {
         for _ in 0..4 {
             self.spawn_ticket();
@@ -394,7 +390,6 @@ impl GameState {
     /// Process a click on a ticket
     pub fn click_ticket(&mut self, index: usize) {
         if let Some(ticket) = self.working.get_mut(index) {
-            let mut rng = rand::rng();
             let clicks = rand_round(1, self.multiplier) as u16;
             ticket.click(clicks);
             if ticket.is_complete() {
@@ -438,6 +433,7 @@ impl GameState {
     /// - It exists in the upgrade hashmap
     /// - It has not already been purchased
     /// - All of its prerequisite purchases have been made
+    ///
     /// Note that it does **not** check if the upgrade can be afforded
     fn upgrade_available(&self, id: &String) -> bool {
         // already bought it, can't buy it again
@@ -449,14 +445,13 @@ impl GameState {
             return false;
         };
 
-        let met_prereqs = self
+        self
             .upgrades
             .get(id)
             .unwrap()
             .requires
             .iter()
-            .all(|req| self.purchased.contains(req));
-        met_prereqs
+            .all(|req| self.purchased.contains(req))
     }
 
     /// Get a list of currently available upgrades
@@ -464,7 +459,7 @@ impl GameState {
         let mut avail = Vec::new();
 
         for (key, val) in self.upgrades.iter() {
-            if self.upgrade_available(&key) {
+            if self.upgrade_available(key) {
                 avail.push(val.clone());
             }
         }
@@ -499,7 +494,7 @@ impl GameState {
         for up in effects {
             match up {
                 Effects::IncMultiplier(x) => self.multiplier *= x,
-                Effects::AutoSolve(diff, cat) => self.autosolve.push((diff.clone(), cat.clone())),
+                Effects::AutoSolve(diff, cat) => self.autosolve.push((*diff, cat.clone())),
                 Effects::IncCashMultiplier(x) => self.cash_mult *= x,
                 Effects::IncXPMultiplier(x) => self.xp_mult *= x,
             }
