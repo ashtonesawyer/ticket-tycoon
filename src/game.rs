@@ -223,7 +223,8 @@ fn cash_multiplier_25() {
     let mut game = GameState::new();
     game.cash_mult += 0.25;
     for _ in 0..8 {
-        game.working.push(Ticket::new(Difficulty::Easy, Category::Web, "name"));
+        game.working
+            .push(Ticket::new(Difficulty::Easy, Category::Web, "name"));
     }
     for _ in 0..8 {
         for _ in 0..=game.working[0].goal() {
@@ -240,7 +241,8 @@ fn xp_multiplier_25() {
     let mut game = GameState::new();
     game.xp_mult += 0.25;
     for _ in 0..8 {
-        game.working.push(Ticket::new(Difficulty::Easy, Category::Web, "name"));
+        game.working
+            .push(Ticket::new(Difficulty::Easy, Category::Web, "name"));
     }
     for _ in 0..8 {
         for _ in 0..=game.working[0].goal() {
@@ -285,9 +287,9 @@ fn load_upgrades() -> HashMap<String, Upgrade> {
     hash
 }
 
-/// Multiply the base by the multiplier and round up/down 
+/// Multiply the base by the multiplier and round up/down
 /// Should round up ((multiplier % 1) * 100)% of the time
-fn rand_round(base: u64, multiplier: f32 ) -> u64 {
+fn rand_round(base: u64, multiplier: f32) -> u64 {
     let mut rng = rand::rng();
     let ret = if rng.random::<f32>() < (multiplier % 1.0) {
         (base as f32 * multiplier).ceil() as u64
@@ -397,9 +399,18 @@ impl GameState {
             ticket.click(clicks);
             if ticket.is_complete() {
                 let (cash, xp) = match ticket.difficulty() {
-                    Difficulty::Easy => (rand_round(Self::BASE_EASY_CASH, self.cash_mult), rand_round(Self::BASE_EASY_XP, self.xp_mult)),
-                    Difficulty::Med => (rand_round(Self::BASE_MED_CASH, self.cash_mult), rand_round(Self::BASE_MED_XP, self.xp_mult)),
-                    Difficulty::Hard => (rand_round(Self::BASE_HARD_CASH, self.cash_mult), rand_round(Self::BASE_HARD_XP, self.xp_mult)),
+                    Difficulty::Easy => (
+                        rand_round(Self::BASE_EASY_CASH, self.cash_mult),
+                        rand_round(Self::BASE_EASY_XP, self.xp_mult),
+                    ),
+                    Difficulty::Med => (
+                        rand_round(Self::BASE_MED_CASH, self.cash_mult),
+                        rand_round(Self::BASE_MED_XP, self.xp_mult),
+                    ),
+                    Difficulty::Hard => (
+                        rand_round(Self::BASE_HARD_CASH, self.cash_mult),
+                        rand_round(Self::BASE_HARD_XP, self.xp_mult),
+                    ),
                 };
                 self.wallet.add_cash(cash);
                 self.wallet.add_xp(xp);
