@@ -21,9 +21,7 @@ pub fn app() -> Element {
 
     use_future(move || async move {
         loop {
-            let mut s = state();
-            s.autosolve();
-            state.set(s);
+            state.write().autosolve();
             sleep(Duration::from_secs(1)).await;
         }
     });
