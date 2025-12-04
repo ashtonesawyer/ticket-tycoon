@@ -477,8 +477,7 @@ impl GameState {
 
         let effects = {
             let upgrade = self.upgrades.get(id).unwrap();
-            self.wallet.rm_cash(upgrade.cost.cash())?;
-            self.wallet.rm_xp(upgrade.cost.xp())?;
+            self.wallet.spend(upgrade.cost.cash(), upgrade.cost.xp())?;
             self.purchased.insert(upgrade.id.clone());
             upgrade.effects.clone()
         };

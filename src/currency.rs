@@ -112,4 +112,14 @@ impl Currency {
         self.xp -= n;
         Ok(())
     }
+
+    /// Atomically spend cash + XP
+    pub fn spend(&mut self, c: u64, x: u64) -> Result<(), WalletError> {
+        if c > self.cash { return Err(WalletError::InsufficientCash); }
+        if x > self.xp { return Err(WalletError::InsufficientXP); }
+
+        self.rm_cash(c).unwrap();
+        self.rm_xp(x).unwrap();
+        Ok(())
+    }
 }
