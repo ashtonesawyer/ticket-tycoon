@@ -492,7 +492,9 @@ impl GameState {
         for up in effects {
             match up {
                 Effects::IncMultiplier(x) => self.multiplier *= x,
-                Effects::AutoSolve(diff, cat) => { let _ = self.autosolve.insert((*diff, *cat)); },
+                Effects::AutoSolve(diff, cat) => {
+                    let _ = self.autosolve.insert((*diff, *cat));
+                }
                 Effects::IncCashMultiplier(x) => self.cash_mult *= x,
                 Effects::IncXPMultiplier(x) => self.xp_mult *= x,
             }
