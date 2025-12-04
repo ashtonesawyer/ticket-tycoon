@@ -5,7 +5,14 @@ Ashton Sawyer
 A clicker/idle game based on an IT organization and its help desk.
 
 ## Running
-This was tested using `dx serve --platform desktop`
+All testing for this game was done with Dioxus serving to the desktop. Because
+of this, Dioxus has been imported so that `cargo run` will launch the desktop 
+version of the app. 
+
+If you want to try to run this on a different platform, you can install the
+Dioxus CLI (instructions found 
+[here](https://dioxuslabs.com/learn/0.7/getting_started/)) and serve the app
+using `dx serve --platform <platform>`
 
 ## Dev Notes
 
