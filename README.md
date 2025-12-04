@@ -15,7 +15,7 @@ Dioxus CLI (instructions found
 using `dx serve --platform <platform>`
 
 ## Testing
-Basically every function in the code has one or more unit test to make sure
+Basically every function in the code has one or more unit tests to make sure
 it's working as intended. These can be run with `cargo test`. 
 
 Writing tests for the functions that have to work with random numbers was 
@@ -164,3 +164,77 @@ and it updated it for me, saving me a lot of time.
 I still made some adjustments by hand to the data in `upgrades.json` for ease
 of use and to try to give *some* thought to the game experience, but the bulk
 of it was done with GenAI. 
+
+### rand_round
+When I started implementing the multiplier upgrades, I knew I wanted the
+multipliers to be float, but I wanted to keep the actual values that they were
+dealing with (clicks, cash, etc.) to stay integers. This meant that I had to 
+have some way of converting these float results into integers without losing 
+the benefit that the multipliers are supposed to give to the player. What I 
+came up with was the `rand_round` function. 
+
+`rand_round` takes a base value and a multiplier. Each time it's called it 
+generates a new random float in [0, 1). The function gets the product of 
+the multiplier and the base, and then rounds up or down depending on if the
+generated number is greater than or less than the fractional part of the 
+multiplier. 
+
+Say we have the base value of one click on the ticket per one click of the user
+pressing LMB, and we have a multiplier of 1.5. `rand_round(1, 1.5)` would 
+return 1 about 50% of the time, and would return 2 the other 50% of the time. 
+If this worked perfectly, we would get 2 on one run and 1 on another, resulting
+in 3 ticket clicks from 2 user clicks, which is the correct amount for 2 * 1.5.
+
+When the base number is one, it doesn't take many runs for the average to start
+converging on the real result. I used the function below to test `rand_round()`
+with varying bases and number of values to average.  
+
+```rust
+fn main() {
+    let mults: [f32; 10] = [1.1, 1.3, 1.6, 1.9, 2.0, 2.4, 2.8, 3.2, 3.5, 3.7];
+    let base: u64 = 1;
+    println!("Real Result\tAvg Result");
+    for i in 0..10 {
+        let mut count: Vec<u64> = Vec::new();
+        for _ in 0..10 {
+            count.push(rand_round(base, mults[i]));
+        }
+        println!("{:.2}\t\t{:.2}", base as f32 * mults[i], count.iter().sum::<u64>() as f32 / count.len() as f32);
+    }
+}
+```
+
+In this case, we only ran `rand_round()` 10 times and it's very close to the expected value. 
+
+```
+Real Result	Avg Result
+1.10		1.10
+1.30		1.40
+1.60		1.50
+1.90		2.00
+2.00		2.00
+2.40		2.60
+2.80		2.80
+3.20		3.20
+3.50		3.20
+3.70		3.80
+```
+
+It does start to get a little off with different base values. When the base is
+set to 12, the values are still quite off even when averaging 1,000,000 
+results, indicating that it's not converging to the correct numbers. But it's 
+close enough for my purposes so I haven't felt the need to fix it in any way. 
+
+```
+Real Result	Avg Result
+13.20		13.10
+15.60		15.30
+19.20		19.60
+22.80		22.90
+24.00		24.00
+28.80		28.40
+33.60		33.80
+38.40		38.20
+42.00		42.00
+44.40		44.70
+``` 
