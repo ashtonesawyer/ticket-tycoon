@@ -84,11 +84,12 @@ fn click_multiplier_25() {
     game.working
         .push(Ticket::new(Difficulty::Hard, Category::Web, "name"));
     game.multiplier += 0.25;
-    for _ in 0..15 {
+    let clicks = Ticket::HARD_GOAL / 2; //needs to be small enough that it won't complete the ticket
+    for _ in 0..clicks {
         game.click_ticket(0);
     }
-    assert!(game.working[0].clicked() > 15);
-    assert!(game.working[0].clicked() < 22);
+    assert!(game.working[0].clicked() > clicks);
+    assert!(game.working[0].clicked() < (clicks as f32 * 1.5).floor() as u16);
 }
 
 #[test]
@@ -98,10 +99,11 @@ fn click_multiplier_50() {
     game.working
         .push(Ticket::new(Difficulty::Hard, Category::Web, "name"));
     game.multiplier += 0.5;
-    for _ in 0..15 {
+    let clicks = Ticket::HARD_GOAL / 2;
+    for _ in 0..clicks {
         game.click_ticket(0);
     }
-    assert!(game.working[0].clicked() > 20);
+    assert!(game.working[0].clicked() > (clicks as f32 * 1.25).ceil() as u16);
 }
 
 #[test]
@@ -111,10 +113,11 @@ fn click_multiplier_75() {
     game.working
         .push(Ticket::new(Difficulty::Hard, Category::Web, "name"));
     game.multiplier += 0.75;
-    for _ in 0..15 {
+    let clicks = Ticket::HARD_GOAL / 2;
+    for _ in 0..clicks {
         game.click_ticket(0);
     }
-    assert!(game.working[0].clicked() > 22);
+    assert!(game.working[0].clicked() > (clicks as f32 * 1.5).ceil() as u16);
 }
 
 #[test]
@@ -182,7 +185,7 @@ fn autosolve_one() {
     game.init_queue();
     let diff = game.working[0].difficulty();
     let cat = game.working[0].category();
-    let _ = game.autosolve.insert((diff.clone(), cat.clone()));
+    let _ = game.autosolve.insert((*diff, *cat));
     for _ in 0..4 {
         game.autosolve();
     }
@@ -196,7 +199,7 @@ fn autosolve_dup() {
     game.working.push(game.working[0].clone());
     let diff = game.working[0].difficulty();
     let cat = game.working[0].category();
-    let _ = game.autosolve.insert((diff.clone(), cat.clone()));
+    let _ = game.autosolve.insert((*diff, *cat));
     for _ in 0..4 {
         game.autosolve();
     }
@@ -212,8 +215,8 @@ fn autosolve_two() {
     let cat = game.working[0].category();
     let diff1 = game.working[1].difficulty();
     let cat1 = game.working[1].category();
-    let _ = game.autosolve.insert((diff.clone(), cat.clone()));
-    _ = game.autosolve.insert((diff1.clone(), cat1.clone()));
+    let _ = game.autosolve.insert((*diff, *cat));
+    _ = game.autosolve.insert((*diff1, *cat1));
     for _ in 0..4 {
         game.autosolve();
     }

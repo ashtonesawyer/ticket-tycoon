@@ -41,7 +41,7 @@ fn not_complete() {
 #[test]
 fn easy_complete() {
     let mut ticket = Ticket::new(Difficulty::Easy, Category::Web, "name");
-    for _ in 0..6 {
+    for _ in 0..Ticket::EASY_GOAL + 1 {
         ticket.click(1);
     }
     assert_eq!(ticket.is_complete(), true);
@@ -51,7 +51,7 @@ fn easy_complete() {
 fn med_complete() {
     let mut ticket = Ticket::new(Difficulty::Med, Category::Web, "name");
     assert_eq!(ticket.is_complete(), false);
-    for _ in 0..16 {
+    for _ in 0..Ticket::MED_GOAL + 1 {
         ticket.click(1);
     }
     assert_eq!(ticket.is_complete(), true);
@@ -61,7 +61,7 @@ fn med_complete() {
 fn hard_complete() {
     let mut ticket = Ticket::new(Difficulty::Hard, Category::Web, "name");
     assert_eq!(ticket.is_complete(), false);
-    for _ in 0..31 {
+    for _ in 0..Ticket::HARD_GOAL + 1 {
         ticket.click(1);
     }
     assert_eq!(ticket.is_complete(), true);
@@ -121,6 +121,10 @@ pub struct Ticket {
 }
 
 impl Ticket {
+    pub const EASY_GOAL: u16 = 5;
+    pub const MED_GOAL: u16 = 15;
+    pub const HARD_GOAL: u16 = 30;
+
     /// Create a new ticket
     pub fn new(difficulty: Difficulty, category: Category, name: &str) -> Self {
         Self {
@@ -129,9 +133,9 @@ impl Ticket {
             clicked: 0,
             name: name.to_string(),
             goal: match difficulty {
-                Difficulty::Easy => 5,
-                Difficulty::Med => 15,
-                Difficulty::Hard => 30,
+                Difficulty::Easy => Self::EASY_GOAL,
+                Difficulty::Med => Self::MED_GOAL,
+                Difficulty::Hard => Self::HARD_GOAL,
             },
         }
     }
