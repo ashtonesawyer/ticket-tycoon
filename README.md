@@ -41,6 +41,8 @@ fairly comfortable with CSS, so using it to style components was convenient.
 It's also very well documented and pretty easy to google things for, which is
 nice. 
 
+Note that none of the AI generated Dioxus code was used in the current product.
+
 ### Effects: Struct or Enum
 Originally I had my upgrades be a struct because it seemed simple and quick to
 implement. I ended up changing to and enum because of the autosolve effect. If
@@ -132,3 +134,21 @@ balanced and that these base values should probably be changed for a better
 game experience. If/When that happens, the unit tests would have to be updated.
 In order to only have to change the values in one place, I changed then to 
 `const`s.
+
+### AI Usage
+I kept use of AI code to a minimum. As mentioned above, I used it to get 
+sketches of the different GUI libraries I was considering, but I didn't 
+keep any of the code that it generated. 
+
+I did use it to generate basically everything in `upgrades.json`. I gave it
+my upgrade struct and told it what kinds of things that I wanted and 
+copy/pasted it in. I did this mostly because it saved me a bunch of time. It 
+allowed me to focus much more on the software than on the game design. 
+
+ChatGPT was also useful when updating my `Upgrade` struct. When `Effects` 
+changed from a struct to an enum, I gave it my old json and my new format
+and it updated it for me, saving me a lot of time. 
+
+I still made some adjustments by hand to the data in `upgrades.json` for ease
+of use and to try to give *some* thought to the game experience, but the bulk
+of it was done with GenAI. 
