@@ -88,7 +88,7 @@ fn equality() {
 }
 
 /// How difficult a ticket is to complete
-#[derive(Debug, PartialEq, Clone, Copy, Deserialize, Serialize)]
+#[derive(Debug, Eq, Hash, PartialEq, Clone, Copy, Deserialize, Serialize)]
 pub enum Difficulty {
     Easy,
     Med,
@@ -96,7 +96,7 @@ pub enum Difficulty {
 }
 
 /// Categories that tickets can full under
-#[derive(Debug, PartialEq, Clone, Copy, Deserialize, Serialize)]
+#[derive(Debug, Eq, Hash, PartialEq, Clone, Copy, Deserialize, Serialize)]
 pub enum Category {
     Network,
     Windows,

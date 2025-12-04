@@ -179,7 +179,7 @@ fn autosolve_one() {
     game.init_queue();
     let diff = game.working[0].difficulty();
     let cat = game.working[0].category();
-    game.autosolve.push((diff.clone(), cat.clone()));
+    let _ = game.autosolve.insert((diff.clone(), cat.clone()));
     for _ in 0..4 {
         game.autosolve();
     }
@@ -193,7 +193,7 @@ fn autosolve_dup() {
     game.working.push(game.working[0].clone());
     let diff = game.working[0].difficulty();
     let cat = game.working[0].category();
-    game.autosolve.push((diff.clone(), cat.clone()));
+    let _ = game.autosolve.insert((diff.clone(), cat.clone()));
     for _ in 0..4 {
         game.autosolve();
     }
@@ -209,8 +209,8 @@ fn autosolve_two() {
     let cat = game.working[0].category();
     let diff1 = game.working[1].difficulty();
     let cat1 = game.working[1].category();
-    game.autosolve.push((diff.clone(), cat.clone()));
-    game.autosolve.push((diff1.clone(), cat1.clone()));
+    let _ = game.autosolve.insert((diff.clone(), cat.clone()));
+    _ = game.autosolve.insert((diff1.clone(), cat1.clone()));
     for _ in 0..4 {
         game.autosolve();
     }
@@ -315,7 +315,7 @@ pub struct GameState {
     /// How much XP per completed ticket multiplier
     xp_mult: f32,
     /// What difficulty + category combos have autosolve enabled
-    autosolve: Vec<(Difficulty, Category)>,
+    autosolve: HashSet<(Difficulty, Category)>,
     /// All possible upgrades mapped by ID
     upgrades: HashMap<String, Upgrade>,
     /// ID of any purchased upgrades
@@ -338,7 +338,7 @@ impl GameState {
             multiplier: 1.0,
             cash_mult: 1.0,
             xp_mult: 1.0,
-            autosolve: Vec::new(),
+            autosolve: HashSet::new(),
             upgrades: load_upgrades(),
             purchased: HashSet::new(),
         }
@@ -492,7 +492,7 @@ impl GameState {
         for up in effects {
             match up {
                 Effects::IncMultiplier(x) => self.multiplier *= x,
-                Effects::AutoSolve(diff, cat) => self.autosolve.push((*diff, *cat)),
+                Effects::AutoSolve(diff, cat) => { let _ = self.autosolve.insert((*diff, *cat)); },
                 Effects::IncCashMultiplier(x) => self.cash_mult *= x,
                 Effects::IncXPMultiplier(x) => self.xp_mult *= x,
             }
