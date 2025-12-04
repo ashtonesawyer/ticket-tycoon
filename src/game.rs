@@ -78,6 +78,7 @@ fn click_easy_incomplete() {
 }
 
 #[test]
+#[ignore]
 fn click_multiplier_25() {
     let mut game = GameState::new();
     game.working
@@ -91,6 +92,7 @@ fn click_multiplier_25() {
 }
 
 #[test]
+#[ignore]
 fn click_multiplier_50() {
     let mut game = GameState::new();
     game.working
@@ -103,6 +105,7 @@ fn click_multiplier_50() {
 }
 
 #[test]
+#[ignore]
 fn click_multiplier_75() {
     let mut game = GameState::new();
     game.working
@@ -219,6 +222,7 @@ fn autosolve_two() {
 }
 
 #[test]
+#[ignore]
 fn cash_multiplier_25() {
     let mut game = GameState::new();
     game.cash_mult += 0.25;
@@ -238,6 +242,7 @@ fn cash_multiplier_25() {
 }
 
 #[test]
+#[ignore]
 fn xp_multiplier_25() {
     let mut game = GameState::new();
     game.xp_mult += 0.25;

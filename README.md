@@ -14,6 +14,18 @@ Dioxus CLI (instructions found
 [here](https://dioxuslabs.com/learn/0.7/getting_started/)) and serve the app
 using `dx serve --platform <platform>`
 
+## Testing
+Basically every function in the code has one or more unit test to make sure
+it's working as intended. These can be run with `cargo test`. 
+
+Writing tests for the functions that have to work with random numbers was 
+difficult. The goal of these tests was to make sure that *most of the time*
+values were falling into a certain range. But that does mean that they fail
+sometimes, and since there are 5 or so of these tests, sometimes it takes more
+than two runs for all of the tests to pass. Because of this, I ignore these 
+tests by default. They can be included in the run tests using 
+`cargo test -- --include-ignored`.
+
 ## Dev Notes
 
 ### Types
