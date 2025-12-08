@@ -307,6 +307,15 @@ fn rand_round(base: u64, multiplier: f32) -> u64 {
     }
 }
 
+/// Struct for returning game stats affected by upgrades
+#[derive(Clone, PartialEq)]
+pub struct Stats {
+    pub multiplier: f32,
+    pub cash_mult: f32,
+    pub xp_mult: f32,
+    pub autosolve: HashSet<(Difficulty, Category)>,
+}
+
 /// Data needed for the main game loop
 #[derive(Clone, Debug)]
 pub struct GameState {
@@ -358,6 +367,15 @@ impl GameState {
 
     pub fn working(&self) -> &Vec<Ticket> {
         &self.working
+    }
+
+    pub fn stats(&self) -> Stats {
+        Stats {
+            multiplier: self.multiplier,
+            cash_mult: self.cash_mult,
+            xp_mult: self.xp_mult,
+            autosolve: self.autosolve.clone(),
+        }
     }
 
     pub fn init_queue(&mut self) {

@@ -10,14 +10,13 @@ use tokio::time::sleep;
 pub fn app() -> Element {
     let mut state = use_signal(GameState::new);
     let mut error = use_signal(String::new);
+    let mut show = use_signal(|| false);
 
-    // info!("{:?}", state());
+    info!("Show checked: {}", show.read());
 
     if state.read().working().is_empty() {
         state.write().init_queue();
     }
-
-    // use_interval(Duration::from_secs(2), move |_| state.write().autosolve());
 
     use_future(move || async move {
         loop {
@@ -27,7 +26,11 @@ pub fn app() -> Element {
     });
 
     rsx! {
-        Header { cash: state.read().wallet().cash(), xp: state.read().wallet().xp() }
+        Header { 
+            cash: state.read().wallet().cash(), 
+            xp: state.read().wallet().xp(),
+            on_input:  move |_| show.set(!show()),
+        }
         div {
             style: "display: flex; flex-direction: row; justify-content: space-around; padding: 15px 5px; min-height: 385px",
 
@@ -55,15 +58,23 @@ pub fn app() -> Element {
             style: "border-bottom: 1px solid black; padding-top: 30px",
         }
         Error { err: error.read() }
+        Stat { stats: state.read().stats() }
     }
 }
 
 #[component]
-fn Header(cash: u64, xp: u64) -> Element {
+fn Header(cash: u64, xp: u64, on_input: EventHandler<()>) -> Element {
     rsx! {
         div {
             style: "padding: 0 30px 15px 0; text-align: right; border-bottom: 1px solid black;",
 
+            span {
+                    label { "show stats" }
+                    input {
+                        r#type: "checkbox",
+                        oninput: move |_| on_input.call(()),
+                    }
+                }
             span { "[ ${cash} ]  [ {xp} XP ]" }
         }
     }
@@ -73,7 +84,7 @@ fn Header(cash: u64, xp: u64) -> Element {
 fn Error(err: String) -> Element {
     rsx! {
         div {
-            style: "padding: 30px; color: red; text-align: center; font-weight: bold",
+            style: "padding: 15px; color: red; text-align: center; font-weight: bold",
 
             "{err}"
         }
@@ -186,6 +197,15 @@ fn Upgrades(upgrades: Vec<Upgrade>, on_click: EventHandler<String>) -> Element {
                     }
                 }
             }
+        }
+    }
+}
+
+#[component]
+fn Stat(stats: Stats) -> Element {
+    rsx! {
+        div {
+            h3 { "Stats" }
         }
     }
 }
