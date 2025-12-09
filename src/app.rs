@@ -24,8 +24,8 @@ pub fn app() -> Element {
     });
 
     rsx! {
-        Header { 
-            cash: state.read().wallet().cash(), 
+        Header {
+            cash: state.read().wallet().cash(),
             xp: state.read().wallet().xp(),
             on_input:  move |_| show.set(!show()),
         }
@@ -205,7 +205,8 @@ fn Upgrades(upgrades: Vec<Upgrade>, on_click: EventHandler<String>) -> Element {
 fn Stat(stats: Stats) -> Element {
     info!("Stats: {:?}", stats);
 
-    let autosolve = stats.autosolve
+    let autosolve = stats
+        .autosolve
         .iter()
         .map(|(diff, cat)| format!("{:?}:{:?}", diff, cat))
         .collect::<Vec<_>>()
