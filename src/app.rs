@@ -12,8 +12,6 @@ pub fn app() -> Element {
     let mut error = use_signal(String::new);
     let mut show = use_signal(|| false);
 
-    info!("Show checked: {}", show.read());
-
     if state.read().working().is_empty() {
         state.write().init_queue();
     }
@@ -58,7 +56,9 @@ pub fn app() -> Element {
             style: "border-bottom: 1px solid black; padding-top: 30px",
         }
         Error { err: error.read() }
-        Stat { stats: state.read().stats() }
+        if show() {
+            Stat { stats: state.read().stats() }
+        }
     }
 }
 
@@ -66,7 +66,7 @@ pub fn app() -> Element {
 fn Header(cash: u64, xp: u64, on_input: EventHandler<()>) -> Element {
     rsx! {
         div {
-            style: "padding: 0 30px 15px 0; text-align: right; border-bottom: 1px solid black;",
+            style: "padding: 0px 30px 15px 15px; display: flex; flex-direction: row; justify-content: space-between; border-bottom: 1px solid black;",
 
             span {
                     label { "show stats" }
@@ -203,9 +203,23 @@ fn Upgrades(upgrades: Vec<Upgrade>, on_click: EventHandler<String>) -> Element {
 
 #[component]
 fn Stat(stats: Stats) -> Element {
+    info!("Stats: {:?}", stats);
+
+    let autosolve = stats.autosolve
+        .iter()
+        .map(|(diff, cat)| format!("{:?}:{:?}", diff, cat))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let timestamp = chrono::Utc::now().format("%H:%M:%SZ");
+
     rsx! {
-        div {
-            h3 { "Stats" }
+        pre {
+            style:"font-family: monospace; font-size: 13px; ",
+
+            "[{timestamp} DEBUG stats] click_mult={stats.multiplier:.2}\n",
+            "[{timestamp} DEBUG stats] cash_mult={stats.cash_mult:.2}\n",
+            "[{timestamp} DEBUG stats] xp_mult={stats.xp_mult:.2}\n",
+            "[{timestamp} DEBUG stats] autosolve=[{autosolve}]"
         }
     }
 }

@@ -308,7 +308,7 @@ fn rand_round(base: u64, multiplier: f32) -> u64 {
 }
 
 /// Struct for returning game stats affected by upgrades
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct Stats {
     pub multiplier: f32,
     pub cash_mult: f32,
