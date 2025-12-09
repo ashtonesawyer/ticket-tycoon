@@ -52,10 +52,10 @@ pub fn app() -> Element {
                 }
             }
         }
-        div {
-            style: "border-bottom: 1px solid black; padding-top: 30px",
-        }
         Error { err: error.read() }
+        div {
+            style: "border-bottom: 1px solid black;",
+        }
         if show() {
             Stat { stats: state.read().stats() }
         }
@@ -66,7 +66,7 @@ pub fn app() -> Element {
 fn Header(cash: u64, xp: u64, on_input: EventHandler<()>) -> Element {
     rsx! {
         div {
-            style: "padding: 0px 30px 15px 15px; display: flex; flex-direction: row; justify-content: space-between; border-bottom: 1px solid black;",
+            style: "padding: 0px 30px 15px 30px; display: flex; flex-direction: row; justify-content: space-between; border-bottom: 1px solid black;",
 
             span {
                     label { "show stats" }
@@ -84,7 +84,7 @@ fn Header(cash: u64, xp: u64, on_input: EventHandler<()>) -> Element {
 fn Error(err: String) -> Element {
     rsx! {
         div {
-            style: "padding: 15px; color: red; text-align: center; font-weight: bold",
+            style: "color: red; text-align: center; font-weight: bold; min-height: 30px",
 
             "{err}"
         }
@@ -214,7 +214,7 @@ fn Stat(stats: Stats) -> Element {
 
     rsx! {
         pre {
-            style:"font-family: monospace; font-size: 13px; ",
+            style:"padding-left: 30px; font-family: monospace; font-size: 13px;",
 
             "[{timestamp} DEBUG stats] click_mult={stats.multiplier:.2}\n",
             "[{timestamp} DEBUG stats] cash_mult={stats.cash_mult:.2}\n",
